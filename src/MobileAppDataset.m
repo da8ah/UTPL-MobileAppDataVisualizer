@@ -1,12 +1,14 @@
 classdef MobileAppDataset < handle
     
     properties (Access = private)
-        data;
+        datatable;
+        countries;
     end
     
     methods (Access = private)
         function loadData(obj,path)
-            obj.data = readtable(path);
+            obj.datatable = readtable(path);
+            obj.countries = readtable('africa.csv');
         end
     end
 
@@ -15,13 +17,17 @@ classdef MobileAppDataset < handle
             obj.loadData(path);
         end
         
-        function data = getData(obj)
-            data = obj.data;
+        function datatable = getData(obj)
+            datatable = obj.datatable;
         end
 
         function [releaseDate, cant] = getCountPerMonth(obj)
-            releaseDate = datetime(obj.data{:,'releaseDate'},'InputFormat','yyyy-MM');
-            cant = obj.data{:,'cant'};
+            releaseDate = datetime(obj.datatable{:,'releaseDate'},'InputFormat','yyyy-MM');
+            cant = obj.datatable{:,'cant'};
+        end
+
+        function countries = getCountries(obj)
+            countries = obj.countries;
         end
     end
         
