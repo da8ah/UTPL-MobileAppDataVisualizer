@@ -1,29 +1,45 @@
 classdef MobileAppDataset < handle
     
+    properties (Access = private, Constant)
+        PathDataBase = './data/base/';
+        PathGeographicCoverage = horzcat(MobileAppDataset.PathDataBase,'geographicCoverage_');
+        PathCountPerMonth = horzcat(MobileAppDataset.PathDataBase,'count_per_month.csv');
+    end
+
     properties (Access = private)
-        datatable;
+        countPerMonthTable;
+        continents;
         countries;
     end
     
     methods (Access = private)
-        function loadData(obj,path)
-            obj.datatable = readtable(path);
-            obj.countries = readtable('africa.csv');
+        function loadData(obj)
+            obj.continents = readtable(horzcat(obj.PathGeographicCoverage,'continents','.csv'),'Delimiter',',');
+            obj.countries = cell(1,7);
+            for continent = 1:length(obj.continents{:,1})
+                obj.countries{continent} = {readtable(horzcat(obj.PathGeographicCoverage,replace(lower(obj.continents{continent,1}{:}),' ','_'),'.csv'),'Delimiter',',')};
+            end
+            obj.countPerMonthTable = readtable(obj.PathCountPerMonth);
+            
         end
     end
 
     methods
-        function obj = MobileAppDataset(path)   
-            obj.loadData(path);
+        function obj = MobileAppDataset()   
+            obj.loadData();
         end
         
-        function datatable = getData(obj)
-            datatable = obj.datatable;
+        function countPerMonthTable = getCountPerMonthTable(obj)
+            countPerMonthTable = obj.countPerMonthTable;
         end
 
         function [releaseDate, cant] = getCountPerMonth(obj)
-            releaseDate = datetime(obj.datatable{:,'releaseDate'},'InputFormat','yyyy-MM');
-            cant = obj.datatable{:,'cant'};
+            releaseDate = datetime(obj.countPerMonthTable{:,'releaseDate'},'InputFormat','yyyy-MM');
+            cant = obj.countPerMonthTable{:,'cant'};
+        end
+
+        function continents = getContinents(obj)
+            continents = obj.continents;
         end
 
         function countries = getCountries(obj)
