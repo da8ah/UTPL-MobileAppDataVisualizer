@@ -41,6 +41,10 @@ octave-workspace
 # End of https://www.toptal.com/developers/gitignore/api/matlab
 
 # PYTHON Intermedio
+# IDE env/conf
+.github/
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
