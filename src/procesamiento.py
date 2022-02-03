@@ -57,5 +57,7 @@ def __extraer_cobertura_geografica(df_formated):
     return True
 
 
-def imprimir(s):
-    print(s)
+def imprimir(df):
+    print(df)
+    df = pd.DataFrame(['Hola', 'Mundo'], columns=['Saludo'])
+    return df

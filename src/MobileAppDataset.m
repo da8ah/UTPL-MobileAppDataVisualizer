@@ -20,7 +20,6 @@ classdef MobileAppDataset < handle
                 obj.countries{continent} = {readtable(horzcat(obj.PathGeographicCoverage,replace(lower(obj.continents{continent,1}{:}),' ','_'),'.csv'),'Delimiter',',')};
             end
             obj.countPerMonthTable = readtable(obj.PathCountPerMonth);
-            
         end
     end
 
@@ -44,6 +43,11 @@ classdef MobileAppDataset < handle
 
         function countries = getCountries(obj)
             countries = obj.countries;
+        end
+
+        function msg = pydisp(obj,input)
+            py.importlib.import_module('procesamiento')
+            msg = py.procesamiento.imprimir(input);
         end
     end
         
