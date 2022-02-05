@@ -56,6 +56,10 @@ def __unir_df_index_formatted_con_ubicaciones(df_index_formatted):
         if len(df_countryCodes['name'][df_countryCodes['alpha-3'] == code]) > 0
     ]).tolist()
 
+    # Adding WORLD Code and Name
+    matrixCodesAndNames[0].append('WORLD')
+    matrixCodesAndNames[1].append('WORLD')
+
     # Dataframe with Codes (as index) and Names
     df_countryCodesAndNames = pd.DataFrame({
         'geographicCoverage':
@@ -75,7 +79,7 @@ def __unir_df_index_formatted_con_ubicaciones(df_index_formatted):
     return df_joined
 
 
-def obtener_dataframe():
+def dataframe():
     df_index_formatted = __procesar_fuente_de_datos()
     df_joined = __unir_df_index_formatted_con_ubicaciones(df_index_formatted)
     return df_joined
@@ -95,7 +99,7 @@ def __obtener_continents(df_joined):
     return continents
 
 
-def obtener_ubicaciones(df_joined):
+def ubicaciones(df_joined):
 
     # Filtering Continents
     continents = __obtener_continents(df_joined)
