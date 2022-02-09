@@ -24,12 +24,19 @@ def consultar_dataframe(df,
         query = __consultar_status(query, status)
 
     # Statistical queries to get numbers (quantitative data)
-    switcher = {
-        0: 'D',
-        1: "M",
-        2: "A",
-    }
-    query = __aplicar_frecuency(query, switcher.get(frecuency, 1))
+    if frecuency >= 0 and frecuency <= 2:
+        switcher = {
+            0: 'D',
+            1: 'M',
+            2: 'Y',
+        }
+        if switcher.get(frecuency) == 'D':
+            strftime = '%Y-%m-%d'
+        elif switcher.get(frecuency) == 'M':
+            strftime = '%Y-%m'
+        elif switcher.get(frecuency) == 'Y':
+            strftime = '%Y'
+        query = __aplicar_frecuency(query, switcher.get(frecuency))
     if movmean > 1 and movmean <= 15:
         query = __aplicar_movmean(query, movmean)
 
@@ -37,7 +44,9 @@ def consultar_dataframe(df,
         query = __aplicar_cumulative(query)
 
     # Returning an Array with Indexes and Data Count
-    return [query['name'].index, query['name'].values]
+    return [
+        query.index.strftime(strftime).tolist(), query['name'].values.tolist()
+    ]
 
 
 # Individual functions to each query

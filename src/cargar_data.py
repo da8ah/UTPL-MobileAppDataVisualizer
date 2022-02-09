@@ -105,8 +105,8 @@ def ubicaciones(df_joined):
     continents = __obtener_continents(df_joined)
 
     # Filtering World Countries
-    world = df_joined['country'].dropna().drop_duplicates().sort_values(
-    ).values.tolist()
+    world = df_joined['country'][df_joined['country'] != 'WORLD'].dropna(
+    ).drop_duplicates().sort_values().values.tolist()
     world.insert(0, 'ALL')
 
     # Filtering Countries Per Continent
