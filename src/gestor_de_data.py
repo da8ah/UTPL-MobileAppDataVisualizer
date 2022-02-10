@@ -39,8 +39,7 @@ def consultar_dataframe(df,
         query = __aplicar_frecuency(query, switcher.get(frecuency))
     if movmean > 1 and movmean <= 15:
         query = __aplicar_movmean(query, movmean)
-
-    if cumulative == True:
+    if cumulative:
         query = __aplicar_cumulative(query)
 
     # Returning an Array with Indexes and Data Count
@@ -71,7 +70,7 @@ def __aplicar_frecuency(df, frecuency):
 
 
 def __aplicar_movmean(df, movmean):
-    return df.rolling(movmean).mean().dropna()
+    return df.rolling(int(movmean)).mean().dropna()
 
 
 def __aplicar_cumulative(df):

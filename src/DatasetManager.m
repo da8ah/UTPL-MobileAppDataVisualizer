@@ -89,13 +89,15 @@ classdef DatasetManager < handle
                 case 'Inactivo'
                     status = 'notactive';
             end
-            frecuency = frecuency - 1;
             switch frecuency
-                case 0
+                case 'Diaria'
+                    frecuency = 0;
                     datetimeFormat = 'yyyy-MM-dd';
-                case 1
+                case 'Mensual'
+                    frecuency = 1;
                     datetimeFormat = 'yyyy-MM';
-                case 2
+                case 'Anual'
+                    frecuency = 2;
                     datetimeFormat = 'yyyy';
             end
             consulta = py.gestor_de_data.consultar_dataframe(obj.dataframe, ...
@@ -106,7 +108,7 @@ classdef DatasetManager < handle
                 frecuency, ...
                 movmean, ...
                 cumulative);
-            result = {datetime(string(cell(consulta{1})),'InputFormat',datetimeFormat,'Format','preserveinput'),int32(py.array.array('i',consulta{2}))};
+            result = {datetime(string(cell(consulta{1})),'InputFormat',datetimeFormat,'Format','preserveinput'),double(py.array.array('d',consulta{2}))};
         end
     end
         
