@@ -1,8 +1,8 @@
 classdef DatasetManager < handle
     
     properties (Access = private)
-        init logical = 0;
-        PYENV = pyenv;
+        init logical = 0; % To know if the python ENV is inicialized
+        PYENV = pyenv; % Variable to save all pyenv info
         dataframe;
         continents;
         countries;
@@ -32,6 +32,7 @@ classdef DatasetManager < handle
         end
 
         function loadData(obj)
+            % Loading data to dataframe, continents and countries variables
             obj.dataframe = py.cargar_data.dataframe();
             ubicaciones = py.cargar_data.ubicaciones(obj.dataframe);
 
@@ -45,12 +46,13 @@ classdef DatasetManager < handle
 
     methods
         function obj = DatasetManager(pathMods)
-            obj.loadEnv(pathMods);
-            if obj.init
-                obj.loadData();
+            obj.loadEnv(pathMods); % Load Enviroment and set Init to true
+            if obj.init % if init
+                obj.loadData(); % Load data
             end
         end
         
+        % Getters
         function init = isInit(obj)
             init = obj.init;
         end
@@ -71,7 +73,10 @@ classdef DatasetManager < handle
             countries = obj.countries{:,continent};
         end
 
+        % Use user inputs from GUI to filter data using the dataframe
         function result = filtrar(obj,continent,country,store,status,frecuency,movmean,cumulative)
+            % string(missing) = python None value
+            % if None python function returns all
             if strcmp(continent,'WORLD')
                 continent = string(missing);
             end
@@ -89,6 +94,11 @@ classdef DatasetManager < handle
                 case 'Inactivo'
                     status = 'notactive';
             end
+            % Format to convert datetime index from dataframe
+            % Python function receive:
+            % frecuency = 0 as 'D'
+            % frecuency = 1 as 'M'
+            % frecuency = 2 as 'Y'
             switch frecuency
                 case 'Diaria'
                     frecuency = 0;
@@ -100,6 +110,8 @@ classdef DatasetManager < handle
                     frecuency = 2;
                     datetimeFormat = 'yyyy';
             end
+
+            % Applying filters and querying the dataframe
             consulta = py.gestor_de_data.consultar_dataframe(obj.dataframe, ...
                 continent, ...
                 country, ...
@@ -108,6 +120,8 @@ classdef DatasetManager < handle
                 frecuency, ...
                 movmean, ...
                 cumulative);
+
+            % Returning a cell with formatted dates and quantities
             result = {datetime(string(cell(consulta{1})),'InputFormat',datetimeFormat,'Format','preserveinput'),double(py.array.array('d',consulta{2}))};
         end
     end
